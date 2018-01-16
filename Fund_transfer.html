@@ -1,0 +1,368 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>  
+<title>Fund Transfer system for Indian Govt.</title>  
+<script src="http://rawgit.com/ethereum/web3.js/0.16.0/dist/web3.min.js"></script>
+	<script
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	 <script>
+		window.addEventListener('load', function() {
+		  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+		  if (typeof web3 !== 'undefined') {
+		    // Use Mist/MetaMask's provider
+		    web3 = new Web3(web3.currentProvider);
+		  } else {
+		    console.log('No web3? You should consider trying MetaMask!')
+		    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+		    web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/jusRhRm9lPsVCXFLnnNk"));
+		  }
+var abi = [
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "DM",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "view"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "PMO",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "view"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "Pradhan",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "view"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "StateGovt",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "view"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "balance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "view"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "view"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "projectCostPromised",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "view"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "sendto",
+				"type": "address"
+			},
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "sendAMount_by_Pradhan",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"type": "constructor",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "updateBalanceofStateGovt",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_pradhan",
+				"type": "address"
+			}
+		],
+		"name": "setPradhan",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "sendto",
+				"type": "address"
+			},
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "sendAmount_by_DM",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"name": "sendto",
+				"type": "address"
+			}
+		],
+		"name": "sendAmountBYPMO",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "updateBalanceOf_DM",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "updateBalanceOfPMO",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "PMO",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_sendTo",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "SendAmountByPMO",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_stategovtAddress",
+				"type": "address"
+			}
+		],
+		"name": "setStateGovt",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "updateBalanceOf_Pradhan",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"name": "sendto",
+				"type": "address"
+			}
+		],
+		"name": "sendAmountByS_Govt",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "PMO",
+				"type": "address"
+			}
+		],
+		"name": "checkAddress",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_pmoAddress",
+				"type": "address"
+			}
+		],
+		"name": "setPMO",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_dm",
+				"type": "address"
+			}
+		],
+		"name": "setDM",
+		"outputs": [],
+		"payable": false,
+		"type": "function",
+		"stateMutability": "nonpayable"
+	}
+];
+
+    var MyContract = web3.eth.contract(abi);
+
+    var myContractInstance = MyContract.at('0xb7ef39f44526265bf282eaca6f036f2b6fe884ea');
+
+    // Now you can start your app & access web3 freely:
+    startApp(myContractInstance);
+		})
+</script>
+
+
+</head>  
+<body>  
+  
+</body>  
+</html>
