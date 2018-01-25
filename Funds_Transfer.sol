@@ -26,7 +26,7 @@ contract Operations {
   
     // Getter function to get the address. This is designed to get the address
     // in javascript code
-    function getPmoAddress() constant returns(address){
+    function getPmoAddress() constant returns(address) {
         return PMO;
     }
     
