@@ -24,6 +24,23 @@ contract Operations {
         owner = msg.sender;
     }
   
+    // Getter function to get the address. This is designed to get the address
+    // in javascript code
+    function getPmoAddress() constant returns(address){
+        return PMO;
+    }
+    
+    function getStateGovtAddress() constant returns(address){
+        return StateGovt;
+    }
+    
+    function getDMAddress() constant returns(address){
+        return DM;
+    }
+    
+    function getPradhanAddress() constant returns(address){
+        return Pradhan;
+    }
   //**************************************************************************//
                                     //EVENTS FOR DEBUGGING
 //**************************************************************************//                                    
@@ -66,33 +83,26 @@ contract Operations {
     //***********************************************************************//
     
     /// this function shall be called by FM only
-    function setPMO(address _pmoAddress)
-    onlyOwner
-    {
+    function setPMO(address _pmoAddress) onlyOwner {
         PMO = _pmoAddress; // PMO address set
     }
     
     //called by PMO only
-    function setStateGovt(address _stategovtAddress)
-    //onlyPMO(msg.sender)
-    { 
+    function setStateGovt(address _stategovtAddress) {  
+        //onlyPMO(msg.sender)
         checkAddress(msg.sender);
         require(msg.sender == PMO); 
         StateGovt = _stategovtAddress;
     }
     
     //called by StateGovt only
-    function setDM(address _dm)
-    onlyStateGovt(msg.sender)
-    {
+    function setDM(address _dm) onlyStateGovt(msg.sender) {
         checkAddress(msg.sender); 
         DM = _dm;
     }
     
     //called by DM
-    function setPradhan(address _pradhan)
-        only_DM(msg.sender)
-    {
+    function setPradhan(address _pradhan) only_DM(msg.sender) {
       //require(msg.sender==DM);
       Pradhan=_pradhan;
      
@@ -102,31 +112,23 @@ contract Operations {
 //****************************************************************************//
     
     // this is used to update the balance of the PMO and only FM can do that
-    function updateBalanceOfPMO( uint _amount)
-    onlyOwner
-    { 
+    function updateBalanceOfPMO( uint _amount) onlyOwner {
     // finance minister
     balance[PMO] = _amount;
     
     }
     //only PMO can do this
-    function updateBalanceofStateGovt(uint _amount) 
-    onlyPMO(msg.sender)
-    {
+    function updateBalanceofStateGovt(uint _amount) onlyPMO(msg.sender) {
         //only PMO
         balance[StateGovt]=_amount;
     }
     
     //only stategovt. can do this
-    function updateBalanceOf_DM(uint _amount)
-    onlyStateGovt(msg.sender)
-    {
+    function updateBalanceOf_DM(uint _amount) onlyStateGovt(msg.sender) {
         balance[DM] = _amount;
     }
     
-    function updateBalanceOf_Pradhan(uint _amount)
-    only_DM(msg.sender)
-    {
+    function updateBalanceOf_Pradhan(uint _amount) only_DM(msg.sender) {
         balance[Pradhan] = _amount;
     }
 
@@ -149,26 +151,20 @@ contract Operations {
         
     }
     
-    function sendAmountByS_Govt(uint amount, address sendto)
-    onlyStateGovt(msg.sender)
-    {
+    function sendAmountByS_Govt(uint amount, address sendto) onlyStateGovt(msg.sender) {
         require(amount > 0 && balance[msg.sender] > amount);
         balance[msg.sender] = balance[msg.sender]-amount;
         balance[sendto] = balance[sendto] + amount;
         
     }
     
-    function sendAmount_by_DM(address sendto,uint amount)
-    only_DM(msg.sender)
-    {
+    function sendAmount_by_DM(address sendto,uint amount) only_DM(msg.sender) {
         require(balance[msg.sender] > amount && amount > 0);
         balance[msg.sender]-=amount;
         balance[sendto]+=amount;
     }
     
-    function sendAMount_by_Pradhan(address sendto, uint amount)
-    only_Pradhan(msg.sender)
-    {
+    function sendAMount_by_Pradhan(address sendto, uint amount) only_Pradhan(msg.sender) {
         require(balance[msg.sender] > amount && amount > 0);
         balance[msg.sender]-=amount;
         balance[sendto]+=amount;
