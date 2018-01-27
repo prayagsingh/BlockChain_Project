@@ -15,13 +15,18 @@ contract Operations {
     address public Pradhan;
     //uint state_id=1;
     
-    mapping (uint => uint ) public projectCostPromised; //projectCostPromised[roadConstruction] = 200000000;
+    mapping (uint => uint) public projectCostPromised; //projectCostPromised[roadConstruction] = 200000000;
     mapping (address => uint) public balance;// balance[address] = value
     
     
     //constructor. Initialised only once 
     function Operations() {
         owner = msg.sender;
+    }
+
+    // Creating this function to check the balance assigned to the respective department
+    function checkBalanceofDpt(address addr) constant returns(uint256) {
+        return balance[addr];
     }
   
     // Getter function to get the address. This is designed to get the address
@@ -30,15 +35,15 @@ contract Operations {
         return PMO;
     }
     
-    function getStateGovtAddress() constant returns(address){
+    function getStateGovtAddress() constant returns(address) {
         return StateGovt;
     }
     
-    function getDMAddress() constant returns(address){
+    function getDMAddress() constant returns(address) {
         return DM;
     }
     
-    function getPradhanAddress() constant returns(address){
+    function getPradhanAddress() constant returns(address) {
         return Pradhan;
     }
   //**************************************************************************//
@@ -104,7 +109,7 @@ contract Operations {
     //called by DM
     function setPradhan(address _pradhan) only_DM(msg.sender) {
       //require(msg.sender==DM);
-      Pradhan=_pradhan;
+      Pradhan = _pradhan;
      
     }
 //***************************************************************************//
@@ -141,7 +146,7 @@ contract Operations {
     function sendAmountBYPMO(uint amount, address sendto)
     onlyPMO(msg.sender)
     {
-            require (amount > 0 && balance[PMO] > amount ) ;
+            require (amount > 0 && balance[PMO] > amount);
             balance[msg.sender] = balance[msg.sender]-amount;
             balance[sendto] = balance[sendto] + amount;
             // event to print the values
@@ -151,7 +156,7 @@ contract Operations {
         
     }
     
-    function sendAmountByS_Govt(uint amount, address sendto) onlyStateGovt(msg.sender) {
+    function sendAmountByS_Govt(uint amount,address sendto) onlyStateGovt(msg.sender) {
         require(amount > 0 && balance[msg.sender] > amount);
         balance[msg.sender] = balance[msg.sender]-amount;
         balance[sendto] = balance[sendto] + amount;
